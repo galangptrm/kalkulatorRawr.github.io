@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css" />
+		<script src="jquery/jquery.min.js"></script>
+		<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+    <title>Kalkulator</title>
+  </head>
+  <body>
+    <form id="cal" action="index.html" method="post">
+    <table align="center">
+      <tr>
+        <td colspan="4"><h1 align="center">Kalkulator</h1></td>
+      </tr>
+      <tr>
+        <td colspan="4"><input type="text" id="main_screen" value="" style="text-align:right;"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><p id="second_screen" style="text-align:right;">_</p></td>
+      </tr>
+      <tr>
+        <td><input type="button" data-inline="true" id="btnC" value=" C " onclick="clickClear()"></input></td>
+        <td><input type="button" data-inline="true" id="btnDel" value="<" onclick="clickBackspace()"></input></td>
+        <td></td>
+        <td><input type="button" data-inline="true" id="btnMod" value="mod" onclick="clickMod()"></input></td>
+      </tr>
+      <tr>
+        <td><input type="button" data-inline="true" name="btn1" value=" 7 " onclick="cal.main_screen.value +='7'"></input></td>
+        <td><input type="button" data-inline="true" name="btn2" value=" 8 " onclick="cal.main_screen.value +='8'"></input></td>
+        <td><input type="button" data-inline="true" name="btn3" value=" 9 " onclick="cal.main_screen.value +='9'"></input></td>
+        <td><input type="button" data-inline="true" id="btnTimes" value=" x " onclick="clickTimes()"></input></td>
+      </tr>
+      <tr>
+        <td><input type="button" data-inline="true" name="btn4" value=" 4 " onclick="cal.main_screen.value +='4'"></input></td>
+        <td><input type="button" data-inline="true" name="btn5" value=" 5 " onclick="cal.main_screen.value +='5'"></input></td>
+        <td><input type="button" data-inline="true" name="btn6" value=" 6 " onclick="cal.main_screen.value +='6'"></input></td>
+        <td><input type="button" data-inline="true" id="btnDivided" value=" / " onclick="clickDivided()"></input></td>
+      </tr>
+      <tr>
+        <td><input type="button" data-inline="true" name="btn7" value=" 1 " onclick="cal.main_screen.value +='1'"></input></td>
+        <td><input type="button" data-inline="true" name="btn8" value=" 2 " onclick="cal.main_screen.value +='2'"></input></td>
+        <td><input type="button" data-inline="true" name="btn9" value=" 3 " onclick="cal.main_screen.value +='3'"></input></td>
+        <td><input type="button" data-inline="true" id="btnPlus" value=" + " onclick="clickPlus()"></input></td>
+      </tr>
+      <tr>
+        <td><input type="button" data-inline="true" name="btnTitik" value=" . " onclick="cal.main_screen.value +='.'"></input></td>
+        <td><input type="button" data-inline="true" name="btn0" value=" 0 " onclick="cal.main_screen.value +='0'"></input></td>
+        <td><input type="button" data-inline="true" id="btnEqual" value=" = "
+          onclick="equalsClick()" style="background-color : #FF9800;"></input></td>
+        <td><input type="button" data-inline="true" name="btnMinus"  value=" - " onclick="clickMinus()"></input></td>
+      </tr>
+
+
+    </table>
+    </form>
+
+    <script type="text/javascript">
+
+      var num1="",
+          num2="",
+          result="",        //result penyimpanan sementara hasil perhitungan
+          operator="";      //operator untuk menyimpan nama operator apa yang barusan di klik
+      var
+          mMain_screen,     //Screen tampilan utama
+          mSecond_screen,   //2nd screen (menampilkan angka dan operator (stack))
+          mBtnPlus,
+          mBtnMinus,
+          mBtnDiv,
+          mBtnTimes,
+          mBtnMod,
+          mText;
+
+      window.onload = onCreate(); //Dieksekusi ketika halaman di Load
+
+  //Function onCreate untuk deklarasi objek awal dari tiap operator
+      function onCreate(){
+         mMain_screen    = document.getElementById('main_screen');
+         mSecond_screen  = document.getElementById('second_screen');
+      //    mBtnPlus        = document.getElementById('btnPlus');
+      //    mBtnMinus       = document.getElementById('btnMinus');
+      //    mBtnDiv         = document.getElementById('btnDivided');
+      //    mBtnTimes       = document.getElementById('btnTimes');
+      //    mBtnMod         = document.getElementById('btnMod');
+      }
+
+
+
+      function setmain_screenResult(){                //Menampilkan hasil perhitungan ke main_screen
+        mSecond_screen.innerHTML+=mMain_screen.value; //sekaligus me-reset operator
+        mMain_screen.value = result.toString();
+        operator="";
+      }
+
+      function clickClear(){      //Function clearClear untuk membersihkan
+        mMain_screen.value = "";    //main_screen dan membersihkan semua variabel
+        num1    ="";
+        num2    ="";
+        result  ="";
+        operator="";
+        mSecond_screen.innerHTML = "_";
+      }
+
+      function clearDisplay(){
+        mMain_screen.value = "";
+      }
+
+      function clickBackspace(){
+        mText = mMain_screen.value;
+        mMain_screen.value = mText.substring(0, mText.length - 1);
+        // phone_number.length = 0; //not sure what this is...
+      }
+
+      function parseToFloat(){        //Function parseToFloat untuk mengubah nilai
+        num1 = parseFloat(num1);      //num1, num2 dan result yg semula String, karena mengambil nilai dari main_screen
+        num2 = parseFloat(num2);      //diubah menjadi Float semuanya
+        result = parseFloat(result);
+      }
+
+      //Adalah function standar yang selalu dijalankan setelah
+      //operator ditekan
+          //deklarasi nilai num1, menampilkan di 2nd screen & membersihkan main_screen
+      function operatorClick(op){
+        num1 = mMain_screen.value;
+        mSecond_screen.innerHTML = "";
+        switch (op) {
+            case "plus":
+                  mSecond_screen.innerHTML = mMain_screen.value+' + ';
+                  break;
+            case "minus":
+                  mSecond_screen.innerHTML = mMain_screen.value+' - ';
+                  break;
+            case "times":
+                  mSecond_screen.innerHTML = mMain_screen.value+' x ';
+                  break;
+            case "divided":
+                  mSecond_screen.innerHTML = mMain_screen.value+' / ';
+                  break;
+            case "mod":
+                  mSecond_screen.innerHTML = mMain_screen.value+' mod ';
+                  break;
+          default:break;
+        }
+        clearDisplay();
+      }
+
+//KUMPULAN Function yang dijalankan ketika ada operator yang ditekan
+      function clickPlus(){
+        operator = "plus";
+        operatorClick(operator);
+      }
+
+      function clickMinus(){
+        operator = "minus";
+        operatorClick(operator);
+      }
+
+      function clickTimes(){
+        operator = "times";
+        operatorClick(operator);
+      }
+
+      function clickDivided(){
+        operator = "divided";
+        operatorClick(operator);
+      }
+
+      function clickMod(){
+        operator = "mod";
+        operatorClick(operator);
+      }
+
+      //Function opreand digunakan untuk mengecek operator apa yang ditekan
+        //kemudian menjalankan perhitungan
+      function equalsClick(){
+        switch (operator) {
+          case "plus" :
+                      num2 = main_screen.value;
+                      parseToFloat();
+                      result = num1+num2;
+                      num1 = result;
+                      setmain_screenResult();
+                      break;
+          case "minus" :
+                      num2 = main_screen.value;
+                      parseToFloat();
+                      result = num1-num2;
+                      num1 = result;
+                      setmain_screenResult();
+                      break;
+          case "times"  :
+                      num2 = main_screen.value;
+                      parseToFloat();
+                      result = num1*num2;
+                      num1 = result;
+                      setmain_screenResult();
+                      break;
+          case "divided"  :
+                      num2 = main_screen.value;
+                      parseToFloat();
+                      result = num1/num2;
+                      num1 = result;
+                      setmain_screenResult();
+                      break;
+          case "mod"  :
+                      num2 = main_screen.value;
+                      parseToFloat();
+                      result = num1%num2;
+                      num1 = result;
+                      setmain_screenResult();
+                      break;
+          default: break;
+        }
+      }
+    </script>
+    <p align="center">v0.1</p>
+
+  </body>
+</html>
